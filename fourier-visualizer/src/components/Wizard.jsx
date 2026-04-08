@@ -30,7 +30,7 @@ export default function Wizard({ chapters }) {
                 ${!completed.has(i) && i !== current ? 'bg-gray-700 text-gray-400 cursor-default' : ''}
               `}
             >
-              {completed.has(i) && i !== current ? '✓' : i + 1}
+              {completed.has(i) && i !== current ? '✓' : i}
             </button>
             {i < chapters.length - 1 && (
               <div className={`h-1 flex-1 rounded ${i < current ? 'bg-green-600' : 'bg-gray-700'}`} />
