@@ -5,7 +5,7 @@ import WaveformPlot from '../shared/WaveformPlot'
 import { magnitudeSpectrum, binFrequencies, clampToPowerOf2 } from '../../hooks/useDFT'
 import { useAudio } from '../../hooks/useAudio'
 
-const DEFAULT_AUDIO_URL = '/fourier-visualizer/default_audio.mp3'
+const DEFAULT_AUDIO_URL = `${import.meta.env.BASE_URL}default_audio.mp3`
 const SAMPLE_RATE = 44100
 const N = 4096
 

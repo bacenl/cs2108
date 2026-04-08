@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import MathEq from '../shared/MathEq'
 import { computeFFT, computeFFTComplex } from '../../hooks/useDFT'
 
-const IMAGE_URL = '/fourier-visualizer/default_image.png'
+const IMAGE_URL = `${import.meta.env.BASE_URL}default_image.png`
 
 function getGreyscalePixels(imageData) {
   const { data, width, height } = imageData

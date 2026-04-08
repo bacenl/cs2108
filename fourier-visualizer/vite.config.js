@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/fourier-visualizer/',
+  base: '/cs2108/',
   test: {
     environment: 'jsdom',
     setupFiles: ['./tests/setup.js'],
