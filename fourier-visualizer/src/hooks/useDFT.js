@@ -56,6 +56,19 @@ export function computeFFT(samples) {
 }
 
 /**
+ * Compute the FFT of a complex-valued input.
+ * Both reIn and imIn must have the same power-of-2 length.
+ * Returns { re: Float64Array, im: Float64Array }
+ */
+export function computeFFTComplex(reIn, imIn) {
+  const N = reIn.length
+  const re = new Float64Array(reIn)
+  const im = new Float64Array(imIn)
+  fftInPlace(re, im)
+  return { re, im }
+}
+
+/**
  * Returns the magnitude spectrum for the positive-frequency bins only (N/2 values).
  * Normalised by N so amplitudes are independent of window size.
  */

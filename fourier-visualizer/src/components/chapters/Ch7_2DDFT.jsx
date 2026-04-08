@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import MathEq from '../shared/MathEq'
-import { computeFFT } from '../../hooks/useDFT'
+import { computeFFT, computeFFTComplex } from '../../hooks/useDFT'
 
 const IMAGE_URL = '/fourier-visualizer/default_image.png'
 
@@ -31,7 +31,8 @@ function compute2DFFT(pixels, width, height) {
 
   for (let x = 0; x < width; x++) {
     const colRe = intermediate.map((row) => row.re[x])
-    const { re, im } = computeFFT(colRe)
+    const colIm = intermediate.map((row) => row.im[x])
+    const { re, im } = computeFFTComplex(colRe, colIm)
     for (let y = 0; y < height; y++) {
       outRe[y][x] = re[y]
       outIm[y][x] = im[y]
