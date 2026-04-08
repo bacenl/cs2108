@@ -7,6 +7,7 @@ import Ch4_DFT from './components/chapters/Ch4_DFT'
 import Ch5_FreqBins from './components/chapters/Ch5_FreqBins'
 import Ch6_Sampling from './components/chapters/Ch6_Sampling'
 import Ch7_2DDFT from './components/chapters/Ch7_2DDFT'
+import Ch8_Outro from './components/chapters/Ch8_Outro'
 
 const CHAPTERS = [
   { title: 'Introduction', component: Ch0_Intro },
@@ -17,6 +18,7 @@ const CHAPTERS = [
   { title: '5 — Frequency Bins in Depth', component: Ch5_FreqBins },
   { title: '6 — Sampling & the Nyquist Theorem', component: Ch6_Sampling },
   { title: '7 — 2D DFT', component: Ch7_2DDFT },
+  { title: 'Wrap-up', component: Ch8_Outro },
 ]
 
 export default function App() {
