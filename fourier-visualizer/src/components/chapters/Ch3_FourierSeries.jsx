@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import Slider from '../shared/Slider'
-import WaveformPlot from '../shared/WaveformPlot'
+import DesmosPlot from '../shared/DesmosPlot'
 import MathEq from '../shared/MathEq'
 
 const SAMPLE_RATE = 1000
@@ -51,15 +51,10 @@ export default function Ch3_FourierSeries({ onComplete }) {
   const [omega, setOmega] = useState(1.0)
   const [omegaInteracted, setOmegaInteracted] = useState(false)
 
+  // Kept for numeric inner-product display only — not used for rendering
   const wave1 = useMemo(() => sine(freq1, 1, N_DISPLAY, SAMPLE_RATE), [freq1])
   const wave2 = useMemo(() => sine(freq2, 1, N_DISPLAY, SAMPLE_RATE), [freq2])
-  const product = useMemo(() => wave1.map((v, i) => v * wave2[i]), [wave1, wave2])
   const ip = useMemo(() => innerProduct(wave1, wave2), [wave1, wave2])
-
-  const correlationSamples = useMemo(() => {
-    const testFreq = omega * 50
-    return sine(testFreq, 1, N_DISPLAY, SAMPLE_RATE)
-  }, [omega])
 
   const handleOmegaChange = (v) => {
     setOmega(v)
@@ -121,9 +116,27 @@ export default function Ch3_FourierSeries({ onComplete }) {
             When they match, the product is always positive — non-zero integral.
           </p>
           <div className="grid grid-cols-1 gap-2">
-            <WaveformPlot samples={wave1} height={80} color="#60a5fa" />
-            <WaveformPlot samples={wave2} height={80} color="#34d399" />
-            <WaveformPlot samples={product} height={80} color="#f472b6" yDomain={[-1.5, 1.5]} />
+            <DesmosPlot
+              lines={[{ latex: 'y=\\sin(2\\pi f t)', color: '#60a5fa' }]}
+              variables={{ f: freq1 }}
+              xDomain={[0, 0.04]}
+              yDomain={[-1.5, 1.5]}
+              height={80}
+            />
+            <DesmosPlot
+              lines={[{ latex: 'y=\\sin(2\\pi f t)', color: '#34d399' }]}
+              variables={{ f: freq2 }}
+              xDomain={[0, 0.04]}
+              yDomain={[-1.5, 1.5]}
+              height={80}
+            />
+            <DesmosPlot
+              lines={[{ latex: 'y=\\sin(2\\pi f t)\\cdot\\sin(2\\pi g t)', color: '#f472b6' }]}
+              variables={{ f: freq1, g: freq2 }}
+              xDomain={[0, 0.04]}
+              yDomain={[-1.5, 1.5]}
+              height={80}
+            />
           </div>
           <p className="text-sm text-center font-mono">
             Inner product ≈ <span className={Math.abs(ip) < 0.01 ? 'text-green-400' : 'text-red-400'}>{ip.toFixed(4)}</span>
@@ -221,7 +234,13 @@ export default function Ch3_FourierSeries({ onComplete }) {
           <p className="text-gray-400 text-sm">
             Drag <MathEq math="\omega" /> to see how the correlation with the signal changes:
           </p>
-          <WaveformPlot samples={correlationSamples} height={100} color="#a78bfa" />
+          <DesmosPlot
+            lines={[{ latex: 'y=\\sin(2\\pi p t)', color: '#a78bfa' }]}
+            variables={{ p: omega * 50 }}
+            xDomain={[0, 0.04]}
+            yDomain={[-1.5, 1.5]}
+            height={100}
+          />
           <Slider
             label="ω (angular frequency)"
             min={0.1} max={12.56} step={0.1}
