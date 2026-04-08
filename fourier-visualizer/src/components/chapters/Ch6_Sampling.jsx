@@ -107,7 +107,7 @@ function aliasedFreq(trueFreq, sampleRate) {
 }
 
 export default function Ch6_Sampling({ onComplete }) {
-  const [sampleRate, setSampleRate] = useState(44100)
+  const [sampleRate, setSampleRate] = useState(2000)
   const [aliasTriggered, setAliasTriggered] = useState(false)
 
   const nyquist = sampleRate / 2
@@ -186,7 +186,7 @@ export default function Ch6_Sampling({ onComplete }) {
 
       <Slider
         label="Sample rate"
-        min={100} max={44100} step={100}
+        min={100} max={2000} step={100}
         value={sampleRate}
         onChange={handleSampleRateChange}
         unit="Hz"
@@ -203,6 +203,15 @@ export default function Ch6_Sampling({ onComplete }) {
           Drag the sample rate below {2 * TRUE_FREQ} Hz to trigger aliasing and continue.
         </p>
       )}
+
+      <div>
+        <h3 className="text-base font-semibold text-white mb-2">Visualise aliasing in Python</h3>
+        <p className="text-gray-400 text-sm mb-3">
+          The code reflects the current slider value. Drag the sample rate slider above, then
+          click Run to see both charts update.
+        </p>
+        <PythonBlock code={ch6Code(sampleRate)} />
+      </div>
 
       <div className="flex flex-col gap-3">
         <h3 className="text-base font-semibold text-white">Why aliasing happens: the repeating spectrum</h3>
@@ -226,15 +235,6 @@ export default function Ch6_Sampling({ onComplete }) {
           original spectrum, grey spikes are the repeated copies, and the red spike is the alias
           that folds back into the visible baseband (green shaded region).
         </p>
-      </div>
-
-      <div>
-        <h3 className="text-base font-semibold text-white mb-2">Visualise aliasing in Python</h3>
-        <p className="text-gray-400 text-sm mb-3">
-          The code reflects the current slider value. Drag the sample rate slider above, then
-          click Run to see both charts update.
-        </p>
-        <PythonBlock code={ch6Code(sampleRate)} />
       </div>
     </div>
   )
