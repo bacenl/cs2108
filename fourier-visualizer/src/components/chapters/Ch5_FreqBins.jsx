@@ -256,7 +256,7 @@ export default function Ch5_FreqBins({ onComplete }) {
               Nearest bin: {(Math.round(s0Freq / (1000 / s0N)) * (1000 / s0N)).toFixed(2)} Hz
             </p>
           </div>
-          <PythonBlock code={codeSmearing(s0N, s0Freq)} onRun={markRan} autoRun />
+          <PythonBlock code={codeSmearing(s0N, s0Freq)} onRun={markRan} />
           {!canAdvance && (
             <p className="text-blue-400 text-sm italic">Run the code above to continue.</p>
           )}
@@ -301,7 +301,7 @@ export default function Ch5_FreqBins({ onComplete }) {
               Tone gap: 15 Hz
             </p>
           </div>
-          <PythonBlock code={codeResolution(s1Sm, s1Lg)} onRun={markRan} autoRun />
+          <PythonBlock code={codeResolution(s1Sm, s1Lg)} onRun={markRan} />
           {!canAdvance && (
             <p className="text-blue-400 text-sm italic">Run the code above to continue.</p>
           )}
@@ -343,7 +343,7 @@ export default function Ch5_FreqBins({ onComplete }) {
               Small window: {(s2Sm / 1000 * 1000).toFixed(0)} ms, {(1000 / s2Sm).toFixed(1)} Hz/bin
             </p>
           </div>
-          <PythonBlock code={codeTradeoff(s2Sm, s2Lg)} onRun={markRan} autoRun />
+          <PythonBlock code={codeTradeoff(s2Sm, s2Lg)} onRun={markRan} />
           {!canAdvance && (
             <p className="text-blue-400 text-sm italic">Run the code above to continue.</p>
           )}

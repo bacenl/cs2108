@@ -166,7 +166,6 @@ export default function Ch7_2DDFT({ onComplete }) {
           code={PYTHON_CODE}
           inject={inject}
           onRun={onComplete}
-          autoRun
         />
       ) : (
         !loadError && (

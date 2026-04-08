@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
 import { python } from '@codemirror/lang-python'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
@@ -21,17 +21,14 @@ const STATUS_LABEL = {
  *   inject: fn        — async (pyodide) => void, called before running
  *   onResult: fn      — async (pyodide) => void, called after running
  *   onRun: fn         — (result) => void, called after each run
- *   autoRun: bool     — run automatically on mount
  */
-export default function PythonBlock({ code: initialCode, inject, onResult, onRun, autoRun }) {
+export default function PythonBlock({ code: initialCode, inject, onResult, onRun }) {
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState(null)
+  const [showCode, setShowCode] = useState(true)
   const { status, runCode } = usePyodide()
 
   const busy = status === 'loading' || status === 'running'
-
-  // Keep a stable ref to the latest handleRun so the autoRun effect never goes stale
-  const handleRunRef = useRef(null)
 
   // Sync editor when the code prop changes (e.g. slider updates in Ch5)
   useEffect(() => {
@@ -50,20 +47,21 @@ export default function PythonBlock({ code: initialCode, inject, onResult, onRun
     }
   }
 
-  handleRunRef.current = handleRun
-
-  // Auto-run once on mount when requested
-  useEffect(() => {
-    if (autoRun) handleRunRef.current()
-    // intentionally empty deps — fires only on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <div className="flex flex-col gap-2">
       <div className="rounded-lg overflow-hidden border border-gray-700">
+        {/* Header: always visible */}
         <div className="flex items-center justify-between bg-gray-800 px-3 py-1.5 border-b border-gray-700">
-          <span className="text-xs text-gray-400 font-mono">python</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-mono">python</span>
+            <button
+              onClick={() => setShowCode((v) => !v)}
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors px-1.5 py-0.5 rounded hover:bg-gray-700"
+              title={showCode ? 'Hide code' : 'Show code'}
+            >
+              {showCode ? '</> hide' : '</> show'}
+            </button>
+          </div>
           <button
             onClick={handleRun}
             disabled={busy}
@@ -72,14 +70,18 @@ export default function PythonBlock({ code: initialCode, inject, onResult, onRun
             {STATUS_LABEL[status]}
           </button>
         </div>
-        <CodeMirror
-          value={code}
-          onChange={setCode}
-          extensions={[python()]}
-          theme={vscodeDark}
-          basicSetup={{ lineNumbers: true, foldGutter: false, highlightActiveLine: true }}
-          style={{ fontSize: '13px' }}
-        />
+
+        {/* Editor: collapsible */}
+        {showCode && (
+          <CodeMirror
+            value={code}
+            onChange={setCode}
+            extensions={[python()]}
+            theme={vscodeDark}
+            basicSetup={{ lineNumbers: true, foldGutter: false, highlightActiveLine: true }}
+            style={{ fontSize: '13px' }}
+          />
+        )}
       </div>
 
       {output && (
