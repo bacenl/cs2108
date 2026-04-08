@@ -39,10 +39,19 @@ export default function Ch2_Sinusoids({ onComplete }) {
   return (
     <div className="flex flex-col gap-6">
       <p className="text-gray-300">
-        Any periodic signal can be expressed as a <strong className="text-white">sum of sine waves</strong>.
+        What if I told you that any periodic signal can be expressed as a <strong className="text-white">sum of sine / cosine waves</strong>?
+      </p>
+      <p className="text-gray-300">
+        That's right. Any sound that you and I hear can actually be broken down into simple sinusoids.
+      </p>
+      <p className="text-gray-300">
+        But let's start simple. Let's try to create our own <strong className="text-white">periodic</strong> sound!
+      </p>
+      <p className="text-gray-300">
         Each sine wave has its own frequency and amplitude. Adjust the three sinusoids below
         and hear what the combined sound sounds like.
       </p>
+
 
       <div className="grid grid-cols-1 gap-4">
         {oscillators.map((osc, i) => (
@@ -104,10 +113,20 @@ export default function Ch2_Sinusoids({ onComplete }) {
         </button>
       )}
 
-      <div className="bg-gray-800 rounded-lg p-4 text-sm text-gray-300">
-        <strong className="text-yellow-300">Key insight:</strong> "Frequency" is a mathematical property — not just pitch.
-        Setting amplitude to 0 silences a component without removing it from the sum.
-      </div>
+      {hasPlayed && (
+        <div className="flex flex-col gap-4">
+          <p className="text-blue-300">Hooray! We've created our own sound wave!</p>
+
+          <p className="text-blue-300">
+            Signal processing techniques promise us that they are able to extract the frequencies from an input signal.
+            That means that if you only give me the audio signal you just created, I will be able to tell you the exact frequencies you used to create that signal.
+          </p>
+
+          <p className="text-blue-300">
+            But how do they do it? That's what we'll soon find out in the next chapter!
+          </p>
+        </div>
+      )}
 
       {!hasPlayed && (
         <p className="text-blue-400 text-sm italic">Press Play to hear the combined sound and continue.</p>

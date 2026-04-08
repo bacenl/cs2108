@@ -2,8 +2,44 @@ import { useState } from 'react'
 import Slider from '../shared/Slider'
 import DesmosPlot from '../shared/DesmosPlot'
 import MathEq from '../shared/MathEq'
+import PythonBlock from '../shared/PythonBlock'
 
 const TRUE_FREQ = 440
+
+const CH6_CODE = `import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('dark_background')
+
+f_signal = 440   # Signal frequency (Hz) — try values near sr/2
+sr = 800         # Sample rate (Hz) — try values below 2 * f_signal
+
+t_cont = np.linspace(0, 0.02, 5000)
+t_samp = np.arange(0, 0.02, 1 / sr)
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5))
+
+# Continuous signal
+ax1.plot(t_cont * 1000, np.sin(2 * np.pi * f_signal * t_cont), color='#4b5563', lw=1)
+ax1.stem(t_samp * 1000, np.sin(2 * np.pi * f_signal * t_samp),
+         linefmt='#60a5fa', markerfmt='o', basefmt='none')
+nyquist = sr / 2
+status = "✓ OK" if f_signal < nyquist else "✗ Aliasing!"
+ax1.set(title=f'Signal: {f_signal} Hz  |  Nyquist: {nyquist} Hz  |  {status}',
+        xlabel='Time (ms)', ylabel='Amplitude')
+ax1.grid(alpha=0.3)
+
+# Aliased reconstruction
+alias_freq = f_signal
+n = round(f_signal / sr)
+alias_freq = abs(f_signal - n * sr)
+ax2.plot(t_cont * 1000, np.sin(2 * np.pi * alias_freq * t_cont), color='#f87171', lw=1.5)
+ax2.set(title=f'Reconstructed signal: {alias_freq:.1f} Hz',
+        xlabel='Time (ms)', ylabel='Amplitude')
+ax2.grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+`
 
 function aliasedFreq(trueFreq, sampleRate) {
   const n = Math.round(trueFreq / sampleRate)
@@ -107,6 +143,14 @@ export default function Ch6_Sampling({ onComplete }) {
           Drag the sample rate below {2 * TRUE_FREQ} Hz to trigger aliasing and continue.
         </p>
       )}
+
+      <div>
+        <h3 className="text-base font-semibold text-white mb-3">Visualise aliasing in Python</h3>
+        <p className="text-gray-400 text-sm mb-3">
+          Try setting <code className="text-blue-300">sr</code> below <code className="text-blue-300">2 * f_signal</code> to see aliasing in action.
+        </p>
+        <PythonBlock code={CH6_CODE} />
+      </div>
     </div>
   )
 }

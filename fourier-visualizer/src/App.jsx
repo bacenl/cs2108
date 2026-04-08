@@ -1,4 +1,5 @@
 import Wizard from './components/Wizard'
+import Ch0_Intro from './components/chapters/Ch0_Intro'
 import Ch1_Signal from './components/chapters/Ch1_Signal'
 import Ch2_Sinusoids from './components/chapters/Ch2_Sinusoids'
 import Ch3_FourierSeries from './components/chapters/Ch3_FourierSeries'
@@ -8,6 +9,7 @@ import Ch6_Sampling from './components/chapters/Ch6_Sampling'
 import Ch7_2DDFT from './components/chapters/Ch7_2DDFT'
 
 const CHAPTERS = [
+  { title: 'Introduction', component: Ch0_Intro },
   { title: '1 — What is a Signal?', component: Ch1_Signal },
   { title: '2 — Frequencies & Sinusoids', component: Ch2_Sinusoids },
   { title: '3 — From Fourier Series to the Fourier Transform', component: Ch3_FourierSeries },

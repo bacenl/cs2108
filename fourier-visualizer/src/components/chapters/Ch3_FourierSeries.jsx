@@ -49,17 +49,12 @@ export default function Ch3_FourierSeries({ onComplete }) {
   const [freq1, setFreq1] = useState(100)
   const [freq2, setFreq2] = useState(300)
   const [omega, setOmega] = useState(1.0)
-  const [omegaInteracted, setOmegaInteracted] = useState(false)
 
   // Kept for numeric inner-product display only — not used for rendering
   const wave1 = useMemo(() => sine(freq1, 1, N_DISPLAY, SAMPLE_RATE), [freq1])
   const wave2 = useMemo(() => sine(freq2, 1, N_DISPLAY, SAMPLE_RATE), [freq2])
   const ip = useMemo(() => innerProduct(wave1, wave2), [wave1, wave2])
 
-  const handleOmegaChange = (v) => {
-    setOmega(v)
-    if (!omegaInteracted) setOmegaInteracted(true)
-  }
 
   const advance = () => {
     if (section < SECTIONS.length - 1) {
@@ -86,6 +81,9 @@ export default function Ch3_FourierSeries({ onComplete }) {
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-semibold text-white">Fourier Series</h3>
           <p className="text-gray-300">
+            Let's better understand how we would retrieve the frequncies from the signal you just created.
+          </p>
+          <p className="text-gray-300">
             In the 19th century, Joseph Fourier showed that any <em>periodic</em> function
             can be written as an infinite sum of sines and cosines — the <strong className="text-white">Fourier Series</strong>.
           </p>
@@ -98,14 +96,17 @@ export default function Ch3_FourierSeries({ onComplete }) {
             <strong className="text-yellow-300">Key assumption:</strong> the signal is periodic with period <MathEq math="T" />.
             This gives us a discrete set of frequency coefficients — one per harmonic.
           </div>
+          <p className="text-gray-300 text-sm">
+            The above assumption will ensure that it works with the signal you created, since it is periodic!
+          </p>
         </div>
       )}
 
       {section === 1 && (
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-semibold text-white">Orthogonality of Sine Waves</h3>
+          <h3 className="text-lg font-semibold text-white">Orthogonality of Sine / Cosine Waves</h3>
           <p className="text-gray-300">
-            The reason Fourier decomposition <em>works</em> — and gives unique coefficients — is that sines at
+            The reason Fourier decomposition <em>works</em> — and gives unique coefficients — is that sines / cosines at
             different frequencies are <strong className="text-white">orthogonal</strong>.
             Just like orthogonal basis vectors in linear algebra, you can project a signal onto each frequency
             component independently.
@@ -151,6 +152,14 @@ export default function Ch3_FourierSeries({ onComplete }) {
             Orthogonal basis vectors let you decompose any vector uniquely. Orthogonal frequency basis functions
             let you decompose any signal uniquely.
           </div>
+
+          <p className="text-gray-300">
+            This means that we can "sweep" through the signal and "check" whether the sine / cosine of a certain frequency is present!
+          </p>
+
+          <p className="text-gray-300">
+            In the case of Fourier Transform, integrating from negative to positive infinity is how we "sweep" through the signal, and dot producting is how we "check" if its there!
+          </p>
         </div>
       )}
 
@@ -219,7 +228,7 @@ export default function Ch3_FourierSeries({ onComplete }) {
         <div className="flex flex-col gap-4">
           <h3 className="text-lg font-semibold text-white">The Leap to the Fourier Transform</h3>
           <p className="text-gray-300">
-            The Fourier Series works for periodic signals with period <MathEq math="T" />.
+            So now we know that the Fourier Series works for periodic signals with period <MathEq math="T" />.
             But what about <strong className="text-white">aperiodic</strong> signals?
           </p>
           <p className="text-gray-300">
@@ -231,27 +240,13 @@ export default function Ch3_FourierSeries({ onComplete }) {
             <li>Discrete coefficients <MathEq math="a_k, b_k" /> become a continuous spectrum <MathEq math="X(\omega)" /></li>
           </ul>
           <MathEq block math="X(\omega) = \int_{-\infty}^{\infty} x(t)\, e^{-i\omega t}\, dt" />
-          <p className="text-gray-400 text-sm">
-            Drag <MathEq math="\omega" /> to see how the correlation with the signal changes:
-          </p>
-          <DesmosPlot
-            lines={[{ latex: 'y=\\sin(2\\pi p t)', color: '#a78bfa' }]}
-            variables={{ p: omega * 50 }}
-            xDomain={[0, 0.04]}
-            yDomain={[-1.5, 1.5]}
-            height={100}
-          />
-          <Slider
-            label="ω (angular frequency)"
-            min={0.1} max={12.56} step={0.1}
-            value={omega}
-            onChange={handleOmegaChange}
-            formatValue={(v) => `${v.toFixed(2)} rad/s`}
-          />
           <div className="bg-gray-800 rounded-lg p-4 text-sm text-gray-300">
             <strong className="text-yellow-300">Summary:</strong> Fourier Series (periodic, discrete spectrum)
             → Fourier Transform (aperiodic, continuous spectrum). Both rely on orthogonality of <MathEq math="e^{i\omega t}" /> basis functions.
           </div>
+          <p className="text-gray-300">
+            In the coming chapter, we will try finding the frequency make-up of a non-periodic sound! (i.e. basically any sound you hear!)
+          </p>
         </div>
       )}
 
@@ -265,15 +260,11 @@ export default function Ch3_FourierSeries({ onComplete }) {
         </button>
         <button
           onClick={advance}
-          disabled={section === 4 && !omegaInteracted}
-          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500 transition-colors text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500 transition-colors text-sm"
         >
           {section < SECTIONS.length - 1 ? 'Next section →' : 'I understand — continue ✓'}
         </button>
       </div>
-      {section === 4 && !omegaInteracted && (
-        <p className="text-blue-400 text-sm italic text-center">Move the ω slider to continue.</p>
-      )}
     </div>
   )
 }

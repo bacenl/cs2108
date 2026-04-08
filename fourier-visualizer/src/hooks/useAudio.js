@@ -102,6 +102,17 @@ export function useAudio() {
   )
 
   /**
+   * Create an AudioBuffer from a samples array at the given sample rate.
+   */
+  const createAudioBuffer = useCallback((samples, sr) => {
+    const ctx = getCtx()
+    if (!ctx) return null
+    const buf = ctx.createBuffer(1, samples.length, sr)
+    buf.copyToChannel(new Float32Array(samples), 0)
+    return buf
+  }, [getCtx])
+
+  /**
    * Get current time-domain data from the analyser (Uint8Array, length 2048).
    * Returns null if audio context not yet initialised.
    */
@@ -119,6 +130,7 @@ export function useAudio() {
     playBuffer,
     stop,
     decodeAudioFile,
+    createAudioBuffer,
     getTimeDomainData,
   }
 }

@@ -89,6 +89,22 @@ export function binFrequencies(N, sampleRate) {
 }
 
 /**
+ * Compute the IFFT of a complex spectrum using the conjugate trick.
+ * re and im must have the same power-of-2 length.
+ * Returns a Float64Array of the real-valued time-domain signal.
+ */
+export function computeIFFT(re, im) {
+  const N = re.length
+  const rWork = new Float64Array(re)
+  const iWork = new Float64Array(N)
+  for (let i = 0; i < N; i++) iWork[i] = -im[i]
+  fftInPlace(rWork, iWork)
+  const out = new Float64Array(N)
+  for (let i = 0; i < N; i++) out[i] = rWork[i] / N
+  return out
+}
+
+/**
  * Clamps n to the nearest power of 2 within [min, max].
  */
 export function clampToPowerOf2(n, min = 256, max = 8192) {
