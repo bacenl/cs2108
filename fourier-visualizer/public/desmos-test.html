@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Desmos API Test</title>
+  <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=%VITE_DESMOS_KEY%"></script>
+  <style>
+    body { background: #111827; color: #d1d5db; font-family: sans-serif; padding: 2rem; }
+    #calc { width: 100%; height: 300px; margin-top: 1rem; }
+    label { display: block; margin-top: 1rem; }
+    input[type=range] { width: 100%; }
+    #status { margin-top: 0.5rem; color: #6ee7b7; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <h2>Desmos API — minimal test</h2>
+  <p id="status">Loading…</p>
+  <div id="calc"></div>
+
+  <label>
+    Frequency: <span id="fval">220</span> Hz
+    <input type="range" id="freq" min="50" max="1000" step="10" value="220" />
+  </label>
+  <label>
+    Amplitude: <span id="aval">1.0</span>
+    <input type="range" id="amp" min="0.1" max="1.5" step="0.1" value="1.0" />
+  </label>
+
+  <script>
+    const el = document.getElementById('calc')
+    const status = document.getElementById('status')
+
+    if (!window.Desmos) {
+      status.textContent = '❌ Desmos failed to load — check network / API key'
+    } else {
+      status.textContent = '✅ Desmos loaded OK'
+
+      const calc = Desmos.GraphingCalculator(el, {
+        keypad: false,
+        expressions: false,
+        settingsMenu: false,
+        zoomButtons: false,
+        expressionsTopbar: false,
+        border: false,
+        lockViewport: true,
+      })
+
+      calc.setMathBounds({ left: 0, right: 0.02, bottom: -1.5, top: 1.5 })
+      calc.setExpression({ id: 'f', latex: 'f=220' })
+      calc.setExpression({ id: 'A', latex: 'A=1' })
+      calc.setExpression({ id: 'wave', latex: 'y=A\\sin(2\\pi f t)', color: '#60a5fa' })
+
+      document.getElementById('freq').addEventListener('input', e => {
+        const v = Number(e.target.value)
+        document.getElementById('fval').textContent = v
+        calc.setExpression({ id: 'f', latex: `f=${v}` })
+      })
+
+      document.getElementById('amp').addEventListener('input', e => {
+        const v = Number(e.target.value)
+        document.getElementById('aval').textContent = v.toFixed(1)
+        calc.setExpression({ id: 'A', latex: `A=${v}` })
+      })
+    }
+  </script>
+</body>
+</html>
