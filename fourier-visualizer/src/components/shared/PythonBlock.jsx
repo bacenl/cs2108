@@ -52,8 +52,8 @@ export default function PythonBlock({ code: initialCode, inject, onResult, onRun
       <div className="rounded-lg overflow-hidden border border-gray-700">
         {/* Header: always visible */}
         <div className="flex items-center justify-between bg-gray-800 px-3 py-1.5 border-b border-gray-700">
+          <span className="text-xs text-gray-400 font-mono">python</span>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-mono">python</span>
             <button
               onClick={() => setShowCode((v) => !v)}
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors px-1.5 py-0.5 rounded hover:bg-gray-700"
@@ -61,14 +61,14 @@ export default function PythonBlock({ code: initialCode, inject, onResult, onRun
             >
               {showCode ? '</> hide' : '</> show'}
             </button>
+            <button
+              onClick={handleRun}
+              disabled={busy}
+              className="px-3 py-1 rounded bg-green-700 hover:bg-green-600 transition-colors text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {STATUS_LABEL[status]}
+            </button>
           </div>
-          <button
-            onClick={handleRun}
-            disabled={busy}
-            className="px-3 py-1 rounded bg-green-700 hover:bg-green-600 transition-colors text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {STATUS_LABEL[status]}
-          </button>
         </div>
 
         {/* Editor: collapsible */}
