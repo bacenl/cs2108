@@ -31,6 +31,18 @@ export default function Ch1_Signal({ onComplete }) {
         <p className="text-gray-400 text-sm mt-1">
           where <MathEq math="A" /> is amplitude, <MathEq math="f" /> is frequency (Hz), <MathEq math="t" /> is time (seconds), and <MathEq math="\phi" /> is phase (radians).
         </p>
+        <div className="mt-3 bg-gray-800 rounded-lg p-3 text-sm text-gray-400 flex flex-col gap-1">
+          <p>
+            <strong className="text-gray-200">Why <MathEq math="2\pi" />?</strong>{' '}
+            Sine completes one full cycle when its argument increases by <MathEq math="2\pi" /> (one full turn in radians).
+            Multiplying by <MathEq math="2\pi" /> converts from cycles to radians so the maths works out.
+          </p>
+          <p>
+            <strong className="text-gray-200">Why <MathEq math="ft" />?</strong>{' '}
+            At time <MathEq math="t = 1/f" />, the argument becomes <MathEq math="2\pi f \cdot \tfrac{1}{f} = 2\pi" /> — exactly one cycle.
+            So the wave repeats every <MathEq math="T = 1/f" /> seconds, giving <MathEq math="f" /> complete cycles per second.
+          </p>
+        </div>
       </div>
 
       <DesmosPlot
