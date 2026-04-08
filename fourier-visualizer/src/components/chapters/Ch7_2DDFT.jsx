@@ -142,6 +142,55 @@ export default function Ch7_2DDFT({ onComplete }) {
         </div>
       </div>
 
+      {/* Output explanations */}
+      <div className="flex flex-col gap-3 text-sm text-gray-300">
+        <h3 className="text-base font-semibold text-white">Understanding the three output plots</h3>
+
+        <div className="bg-gray-800 rounded-lg p-4 flex flex-col gap-2">
+          <p className="font-semibold text-gray-100">Plot 1 — Original (greyscale)</p>
+          <p>
+            The input image converted to a single channel where each pixel value represents
+            brightness (0 = black, 255 = white). Colour information is discarded because the
+            DFT treats the image as a 2D real-valued function of intensity.
+          </p>
+        </div>
+
+        <div className="bg-gray-800 rounded-lg p-4 flex flex-col gap-2">
+          <p className="font-semibold text-gray-100">Plot 2 — Magnitude spectrum (log scale, DC centred)</p>
+          <p>
+            Each point <MathEq math="(k_1, k_2)" /> represents a 2D spatial frequency — how
+            rapidly the image intensity oscillates horizontally (<MathEq math="k_2" />) and
+            vertically (<MathEq math="k_1" />). The brightness at that point is{' '}
+            <MathEq math="\log(1 + |X[k_1,k_2]|)" />, telling you{' '}
+            <strong className="text-white">how much</strong> of that frequency is present.
+          </p>
+          <ul className="list-disc list-inside flex flex-col gap-1 mt-1 ml-1 text-gray-400">
+            <li><strong className="text-gray-200">Bright centre</strong> — strong low-frequency content: large uniform regions and smooth gradients.</li>
+            <li><strong className="text-gray-200">Bright lines/spokes</strong> — repeated patterns or strong edges in a particular direction.</li>
+            <li><strong className="text-gray-200">Dim outer ring</strong> — little high-frequency energy, meaning few sharp details or noise.</li>
+          </ul>
+          <p className="text-gray-400">
+            Log scale is used because the DC component (centre) is orders of magnitude larger
+            than the rest — without it, everything except the centre would appear black.
+          </p>
+        </div>
+
+        <div className="bg-gray-800 rounded-lg p-4 flex flex-col gap-2">
+          <p className="font-semibold text-gray-100">Plot 3 — Phase spectrum</p>
+          <p>
+            The phase <MathEq math="\angle X[k_1,k_2] \in [-\pi, \pi]" /> at each frequency
+            encodes <strong className="text-white">where</strong> that frequency's pattern is
+            positioned in the image — it is the shift of the corresponding 2D sinusoid.
+          </p>
+          <p className="text-gray-400">
+            Phase looks like coloured noise but carries the structural information (edges,
+            shapes, object locations). A classic demonstration: if you swap the phase spectra of
+            two images and reconstruct, the result looks like whichever image donated its
+            phase — the visual system follows structure far more than energy.
+          </p>
+        </div>
+      </div>
+
       {/* Image source controls */}
       <div className="flex flex-col gap-2">
         <p className="text-sm text-gray-300">
