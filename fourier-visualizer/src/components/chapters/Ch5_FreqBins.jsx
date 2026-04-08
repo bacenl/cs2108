@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import Slider from '../shared/Slider'
 import SpectrumPlot from '../shared/SpectrumPlot'
 import MathEq from '../shared/MathEq'
-import { magnitudeSpectrum, binFrequencies, clampToPowerOf2 } from '../../hooks/useDFT'
+import { magnitudeSpectrum, binFrequencies } from '../../hooks/useDFT'
 
 const SAMPLE_RATE = 44100
 

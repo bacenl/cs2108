@@ -31,7 +31,6 @@ function compute2DFFT(pixels, width, height) {
 
   for (let x = 0; x < width; x++) {
     const colRe = intermediate.map((row) => row.re[x])
-    const colIm = intermediate.map((row) => row.im[x])
     const { re, im } = computeFFT(colRe)
     for (let y = 0; y < height; y++) {
       outRe[y][x] = re[y]
@@ -105,7 +104,7 @@ export default function Ch7_2DDFT({ onComplete }) {
           renderSpectrum(spectrumCanvasRef.current, outRe, outIm, width, height)
           setStatus('done')
           onComplete()
-        } catch (e) {
+        } catch {
           setStatus('error')
         }
       }, 50)

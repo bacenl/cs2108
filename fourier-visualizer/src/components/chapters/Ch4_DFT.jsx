@@ -53,7 +53,7 @@ export default function Ch4_DFT({ onComplete }) {
       setAudioBuffer(decoded)
       setAudioName(file.name)
       onComplete()
-    } catch (e) {
+    } catch {
       setError('Could not decode audio file. Try a different format.')
     } finally {
       setLoading(false)

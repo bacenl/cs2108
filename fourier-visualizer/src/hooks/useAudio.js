@@ -29,8 +29,8 @@ export function useAudio() {
 
   const stop = useCallback(() => {
     activeNodesRef.current.forEach((n) => {
-      try { n.stop() } catch (_) { /* already stopped */ }
-      try { n.disconnect() } catch (_) { /* already disconnected */ }
+      try { n.stop() } catch { /* already stopped */ }
+      try { n.disconnect() } catch { /* already disconnected */ }
     })
     activeNodesRef.current = []
     setIsPlaying(false)
