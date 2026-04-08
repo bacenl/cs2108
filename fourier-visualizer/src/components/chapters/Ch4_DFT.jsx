@@ -1,11 +1,10 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import MathEq from '../shared/MathEq'
 import SpectrumPlot from '../shared/SpectrumPlot'
 import WaveformPlot from '../shared/WaveformPlot'
 import { magnitudeSpectrum, binFrequencies, clampToPowerOf2 } from '../../hooks/useDFT'
 import { useAudio } from '../../hooks/useAudio'
-
-const DEFAULT_AUDIO_URL = `${import.meta.env.BASE_URL}default_audio.mp3`
+import defaultAudioUrl from '../../assets/default_audio.mp3'
 const SAMPLE_RATE = 44100
 const N = 4096
 
@@ -16,11 +15,13 @@ export default function Ch4_DFT({ onComplete }) {
   const [loading, setLoading] = useState(false)
   const { supported, isPlaying, playBuffer, stop, decodeAudioFile } = useAudio()
 
+  useEffect(() => () => stop(), [stop])
+
   const loadDefault = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(DEFAULT_AUDIO_URL)
+      const res = await fetch(defaultAudioUrl)
       if (!res.ok) throw new Error('Could not load default audio file.')
       const arrayBuffer = await res.arrayBuffer()
       const decoded = await decodeAudioFile(arrayBuffer)

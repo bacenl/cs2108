@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Slider from '../shared/Slider'
 import DesmosPlot from '../shared/DesmosPlot'
 import { useAudio } from '../../hooks/useAudio'
@@ -15,6 +15,8 @@ export default function Ch2_Sinusoids({ onComplete }) {
   const [oscillators, setOscillators] = useState(DEFAULT_OSCILLATORS)
   const { supported, isPlaying, playSynthesized, stop } = useAudio()
   const [hasPlayed, setHasPlayed] = useState(false)
+
+  useEffect(() => () => stop(), [stop])
 
   const updateOscillator = (index, field, value) => {
     setOscillators((prev) =>
