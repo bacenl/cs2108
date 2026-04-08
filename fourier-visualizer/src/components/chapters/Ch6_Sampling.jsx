@@ -6,12 +6,13 @@ import PythonBlock from '../shared/PythonBlock'
 
 const TRUE_FREQ = 440
 
-const CH6_CODE = `import numpy as np
+function ch6Code(sr) {
+  return `import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('dark_background')
 
-f_signal = 440   # Signal frequency (Hz) — try values near sr/2
-sr = 800         # Sample rate (Hz) — try values below 2 * f_signal
+f_signal = ${TRUE_FREQ}   # Signal frequency (Hz)
+sr = ${sr}                # Sample rate (Hz)
 
 t_cont = np.linspace(0, 0.02, 5000)
 t_samp = np.arange(0, 0.02, 1 / sr)
@@ -98,6 +99,7 @@ if is_aliased:
 else:
     print(f"No aliasing: {f_signal} Hz < Nyquist ({nyquist} Hz)")
 `
+}
 
 function aliasedFreq(trueFreq, sampleRate) {
   const n = Math.round(trueFreq / sampleRate)
@@ -229,11 +231,10 @@ export default function Ch6_Sampling({ onComplete }) {
       <div>
         <h3 className="text-base font-semibold text-white mb-2">Visualise aliasing in Python</h3>
         <p className="text-gray-400 text-sm mb-3">
-          Try setting <code className="text-blue-300">sr</code> below{' '}
-          <code className="text-blue-300">2 × f_signal</code> to see aliasing. The second chart
-          shows how a copy of the spectrum folds into the baseband.
+          The code reflects the current slider value. Drag the sample rate slider above, then
+          click Run to see both charts update.
         </p>
-        <PythonBlock code={CH6_CODE} />
+        <PythonBlock code={ch6Code(sampleRate)} />
       </div>
     </div>
   )
