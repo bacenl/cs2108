@@ -1,27 +1,12 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import Slider from '../shared/Slider'
-import WaveformPlot from '../shared/WaveformPlot'
+import DesmosPlot from '../shared/DesmosPlot'
 import MathEq from '../shared/MathEq'
-
-const SAMPLE_RATE = 1000
-const DURATION = 0.02
-
-function generateSine(frequency, amplitude, sampleRate, duration) {
-  const N = Math.floor(sampleRate * duration)
-  return Array.from({ length: N }, (_, i) =>
-    amplitude * Math.sin(2 * Math.PI * frequency * i / sampleRate)
-  )
-}
 
 export default function Ch1_Signal({ onComplete }) {
   const [frequency, setFrequency] = useState(220)
   const [amplitude, setAmplitude] = useState(1.0)
   const [interacted, setInteracted] = useState(false)
-
-  const samples = useMemo(
-    () => generateSine(frequency, amplitude, SAMPLE_RATE, DURATION),
-    [frequency, amplitude]
-  )
 
   const handleFrequencyChange = (v) => {
     setFrequency(v)
@@ -47,7 +32,13 @@ export default function Ch1_Signal({ onComplete }) {
         </p>
       </div>
 
-      <WaveformPlot samples={samples} sampleRate={SAMPLE_RATE} />
+      <DesmosPlot
+        lines={[{ latex: 'y=A\\sin(2\\pi f t)', color: '#60a5fa' }]}
+        variables={{ A: amplitude, f: frequency }}
+        xDomain={[0, 0.02]}
+        yDomain={[-1.5, 1.5]}
+        height={200}
+      />
 
       <div className="flex flex-col gap-4">
         <Slider
