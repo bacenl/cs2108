@@ -1,16 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import Slider from '../shared/Slider'
-import WaveformPlot from '../shared/WaveformPlot'
+import DesmosPlot from '../shared/DesmosPlot'
 import MathEq from '../shared/MathEq'
 
 const TRUE_FREQ = 440
-const DISPLAY_DURATION = 0.01
-const CONTINUOUS_RATE = 10000
-
-function sineAtRate(freq, sampleRate, duration) {
-  const N = Math.floor(sampleRate * duration)
-  return Array.from({ length: N }, (_, i) => Math.sin(2 * Math.PI * freq * i / sampleRate))
-}
 
 function aliasedFreq(trueFreq, sampleRate) {
   const n = Math.round(trueFreq / sampleRate)
@@ -24,16 +17,6 @@ export default function Ch6_Sampling({ onComplete }) {
   const nyquist = sampleRate / 2
   const isAliased = TRUE_FREQ > nyquist
   const perceived = isAliased ? aliasedFreq(TRUE_FREQ, sampleRate) : TRUE_FREQ
-
-  const continuousSamples = useMemo(
-    () => sineAtRate(TRUE_FREQ, CONTINUOUS_RATE, DISPLAY_DURATION),
-    []
-  )
-
-  const reconstructed = useMemo(
-    () => sineAtRate(perceived, CONTINUOUS_RATE, DISPLAY_DURATION),
-    [perceived]
-  )
 
   const handleSampleRateChange = (v) => {
     setSampleRate(v)
@@ -65,7 +48,13 @@ export default function Ch6_Sampling({ onComplete }) {
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-1">
           True signal ({TRUE_FREQ} Hz)
         </h3>
-        <WaveformPlot samples={continuousSamples} height={100} color="#60a5fa" />
+        <DesmosPlot
+          lines={[{ latex: 'y=\\sin(2\\pi f t)', color: '#60a5fa' }]}
+          variables={{ f: TRUE_FREQ }}
+          xDomain={[0, 0.01]}
+          yDomain={[-1.5, 1.5]}
+          height={100}
+        />
       </div>
 
       <div>
@@ -76,7 +65,14 @@ export default function Ch6_Sampling({ onComplete }) {
             : <span className="text-green-400 ml-2">✓ Correct: {perceived.toFixed(1)} Hz</span>
           }
         </h3>
-        <WaveformPlot samples={reconstructed} height={100} color={isAliased ? '#f87171' : '#34d399'} />
+        <DesmosPlot
+          key={isAliased ? 'aliased' : 'correct'}
+          lines={[{ latex: 'y=\\sin(2\\pi f t)', color: isAliased ? '#f87171' : '#34d399' }]}
+          variables={{ f: perceived }}
+          xDomain={[0, 0.01]}
+          yDomain={[-1.5, 1.5]}
+          height={100}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-sm text-center">
