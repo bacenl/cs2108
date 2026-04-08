@@ -4,9 +4,9 @@ import DesmosPlot from '../shared/DesmosPlot'
 import { useAudio } from '../../hooks/useAudio'
 
 const DEFAULT_OSCILLATORS = [
-  { frequency: 220, amplitude: 0.8 },
-  { frequency: 440, amplitude: 0.5 },
-  { frequency: 660, amplitude: 0.3 },
+  { frequency: 220, amplitude: 0.8, phase: 0 },
+  { frequency: 440, amplitude: 0.5, phase: 0 },
+  { frequency: 660, amplitude: 0.3, phase: 0 },
 ]
 
 const COLORS = ['#60a5fa', '#34d399', '#f472b6']
@@ -58,8 +58,8 @@ export default function Ch2_Sinusoids({ onComplete }) {
           <div key={i} className="bg-gray-800 rounded-lg p-4 flex flex-col gap-3">
             <h3 className="text-sm font-semibold text-gray-300">Sinusoid {i + 1}</h3>
             <DesmosPlot
-              lines={[{ latex: 'y=A\\sin(2\\pi f t)', color: COLORS[i] }]}
-              variables={{ A: osc.amplitude, f: osc.frequency }}
+              lines={[{ latex: 'y=A\\sin(2\\pi f t+\\phi)', color: COLORS[i] }]}
+              variables={{ A: osc.amplitude, f: osc.frequency, '\\phi': osc.phase }}
               xDomain={[0, 0.04]}
               yDomain={[-1.5, 1.5]}
               height={100}
@@ -77,6 +77,13 @@ export default function Ch2_Sinusoids({ onComplete }) {
               value={osc.amplitude}
               onChange={(v) => updateOscillator(i, 'amplitude', v)}
             />
+            <Slider
+              label="Phase"
+              min={0} max={6.28} step={0.05}
+              value={osc.phase}
+              onChange={(v) => updateOscillator(i, 'phase', v)}
+              formatValue={(v) => `${v.toFixed(2)} rad`}
+            />
           </div>
         ))}
       </div>
@@ -85,16 +92,19 @@ export default function Ch2_Sinusoids({ onComplete }) {
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Combined signal</h3>
         <DesmosPlot
           lines={[{
-            latex: 'y=A_{1}\\sin(2\\pi f_{1} t)+A_{2}\\sin(2\\pi f_{2} t)+A_{3}\\sin(2\\pi f_{3} t)',
+            latex: 'y=A_{1}\\sin(2\\pi f_{1}t+\\phi_{1})+A_{2}\\sin(2\\pi f_{2}t+\\phi_{2})+A_{3}\\sin(2\\pi f_{3}t+\\phi_{3})',
             color: '#facc15',
           }]}
           variables={{
             'A_{1}': oscillators[0].amplitude,
             'f_{1}': oscillators[0].frequency,
+            '\\phi_{1}': oscillators[0].phase,
             'A_{2}': oscillators[1].amplitude,
             'f_{2}': oscillators[1].frequency,
+            '\\phi_{2}': oscillators[1].phase,
             'A_{3}': oscillators[2].amplitude,
             'f_{3}': oscillators[2].frequency,
+            '\\phi_{3}': oscillators[2].phase,
           }}
           xDomain={[0, 0.04]}
           yDomain={[-3, 3]}
