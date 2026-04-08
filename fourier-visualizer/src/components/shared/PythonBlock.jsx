@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
 import { python } from '@codemirror/lang-python'
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
@@ -17,16 +17,26 @@ const STATUS_LABEL = {
  * Captures matplotlib figures and stdout, displays them below the editor.
  *
  * Props:
- *   code: string     — initial Python code
- *   inject: fn       — async (pyodide) => void, called before running
- *   onResult: fn     — async (pyodide) => void, called after running
+ *   code: string      — Python code (updates editor when prop changes)
+ *   inject: fn        — async (pyodide) => void, called before running
+ *   onResult: fn      — async (pyodide) => void, called after running
+ *   onRun: fn         — (result) => void, called after each run
+ *   autoRun: bool     — run automatically on mount
  */
-export default function PythonBlock({ code: initialCode, inject, onResult, onRun }) {
+export default function PythonBlock({ code: initialCode, inject, onResult, onRun, autoRun }) {
   const [code, setCode] = useState(initialCode)
   const [output, setOutput] = useState(null)
   const { status, runCode } = usePyodide()
 
   const busy = status === 'loading' || status === 'running'
+
+  // Keep a stable ref to the latest handleRun so the autoRun effect never goes stale
+  const handleRunRef = useRef(null)
+
+  // Sync editor when the code prop changes (e.g. slider updates in Ch5)
+  useEffect(() => {
+    setCode(initialCode)
+  }, [initialCode])
 
   const handleRun = async () => {
     try {
@@ -39,6 +49,15 @@ export default function PythonBlock({ code: initialCode, inject, onResult, onRun
       if (onRun) onRun(err)
     }
   }
+
+  handleRunRef.current = handleRun
+
+  // Auto-run once on mount when requested
+  useEffect(() => {
+    if (autoRun) handleRunRef.current()
+    // intentionally empty deps — fires only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="flex flex-col gap-2">

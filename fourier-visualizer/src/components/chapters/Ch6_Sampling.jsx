@@ -233,7 +233,7 @@ export default function Ch6_Sampling({ onComplete }) {
           <code className="text-blue-300">2 × f_signal</code> to see aliasing. The second chart
           shows how a copy of the spectrum folds into the baseband.
         </p>
-        <PythonBlock code={CH6_CODE} />
+        <PythonBlock code={CH6_CODE} autoRun />
       </div>
     </div>
   )
