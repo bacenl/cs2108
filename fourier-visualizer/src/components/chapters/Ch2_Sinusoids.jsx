@@ -1,17 +1,7 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import Slider from '../shared/Slider'
-import WaveformPlot from '../shared/WaveformPlot'
+import DesmosPlot from '../shared/DesmosPlot'
 import { useAudio } from '../../hooks/useAudio'
-
-const SAMPLE_RATE = 1000
-const DURATION = 0.04
-
-function generateSine(freq, amp, sampleRate, duration) {
-  const N = Math.floor(sampleRate * duration)
-  return Array.from({ length: N }, (_, i) =>
-    amp * Math.sin(2 * Math.PI * freq * i / sampleRate)
-  )
-}
 
 const DEFAULT_OSCILLATORS = [
   { frequency: 220, amplitude: 0.8 },
@@ -19,24 +9,12 @@ const DEFAULT_OSCILLATORS = [
   { frequency: 660, amplitude: 0.3 },
 ]
 
+const COLORS = ['#60a5fa', '#34d399', '#f472b6']
+
 export default function Ch2_Sinusoids({ onComplete }) {
   const [oscillators, setOscillators] = useState(DEFAULT_OSCILLATORS)
   const { supported, isPlaying, playSynthesized, stop } = useAudio()
   const [hasPlayed, setHasPlayed] = useState(false)
-
-  const individualWaves = useMemo(
-    () => oscillators.map(({ frequency, amplitude }) =>
-      generateSine(frequency, amplitude, SAMPLE_RATE, DURATION)
-    ),
-    [oscillators]
-  )
-
-  const combined = useMemo(() => {
-    const N = individualWaves[0]?.length ?? 0
-    return Array.from({ length: N }, (_, i) =>
-      individualWaves.reduce((sum, wave) => sum + (wave[i] ?? 0), 0)
-    )
-  }, [individualWaves])
 
   const updateOscillator = (index, field, value) => {
     setOscillators((prev) =>
@@ -68,11 +46,12 @@ export default function Ch2_Sinusoids({ onComplete }) {
         {oscillators.map((osc, i) => (
           <div key={i} className="bg-gray-800 rounded-lg p-4 flex flex-col gap-3">
             <h3 className="text-sm font-semibold text-gray-300">Sinusoid {i + 1}</h3>
-            <WaveformPlot
-              samples={individualWaves[i]}
-              height={100}
-              color={['#60a5fa', '#34d399', '#f472b6'][i]}
+            <DesmosPlot
+              lines={[{ latex: 'y=A\\sin(2\\pi f t)', color: COLORS[i] }]}
+              variables={{ A: osc.amplitude, f: osc.frequency }}
+              xDomain={[0, 0.04]}
               yDomain={[-1.5, 1.5]}
+              height={100}
             />
             <Slider
               label="Frequency"
@@ -93,7 +72,23 @@ export default function Ch2_Sinusoids({ onComplete }) {
 
       <div>
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Combined signal</h3>
-        <WaveformPlot samples={combined} height={140} color="#facc15" yDomain={[-3, 3]} />
+        <DesmosPlot
+          lines={[{
+            latex: 'y=A_{1}\\sin(2\\pi f_{1} t)+A_{2}\\sin(2\\pi f_{2} t)+A_{3}\\sin(2\\pi f_{3} t)',
+            color: '#facc15',
+          }]}
+          variables={{
+            'A_{1}': oscillators[0].amplitude,
+            'f_{1}': oscillators[0].frequency,
+            'A_{2}': oscillators[1].amplitude,
+            'f_{2}': oscillators[1].frequency,
+            'A_{3}': oscillators[2].amplitude,
+            'f_{3}': oscillators[2].frequency,
+          }}
+          xDomain={[0, 0.04]}
+          yDomain={[-3, 3]}
+          height={140}
+        />
       </div>
 
       {!supported ? (
